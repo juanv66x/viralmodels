@@ -38,7 +38,7 @@
 #' # Apply the function to all vl columns using purrr's map_dfc
 #' library(viraldomain)
 #' data("viral", package = "viraldomain")
-#' viral_imputed <- viral |>
+#' viral_imputed <- viral %>%
 #' mutate(across(starts_with("vl"), ~impute_undetectable(.x)))
 #' traindata <- viral_imputed
 #' target <- "cd_2022"
@@ -77,19 +77,19 @@ viralpreds <- function(target, pliegues, repeticiones, rejilla, semilla, data, p
   )
   
   # Select the best workflow based on RMSE
-  best_workflow <- workflow_results |>
-    dplyr::mutate(rmse = purrr::map_dbl(result, ~ .x |>
-                                          tune::show_best(metric = "rmse") |>
-                                          dplyr::slice(1) |>
-                                          dplyr::pull(mean))) |>
-    dplyr::slice_min(rmse, with_ties = FALSE) |>
+  best_workflow <- workflow_results %>%
+    dplyr::mutate(rmse = purrr::map_dbl(result, ~ .x %>%
+                                          tune::show_best(metric = "rmse") %>%
+                                          dplyr::slice(1) %>%
+                                          dplyr::pull(mean))) %>%
+    dplyr::slice_min(rmse, with_ties = FALSE) %>%
     dplyr::pull(wflow_id)
   
   # Get the metrics of the best workflow
-  best_metrics <- workflow_results |>
-    dplyr::mutate(metrics = purrr::map(result, ~ .x |>
-                                         tune::show_best(metric = c("rmse")))) |>
-    dplyr::filter(wflow_id == best_workflow) |>
+  best_metrics <- workflow_results %>%
+    dplyr::mutate(metrics = purrr::map(result, ~ .x %>%
+                                         tune::show_best(metric = c("rmse")))) %>%
+    dplyr::filter(wflow_id == best_workflow) %>%
     dplyr::pull(metrics)
   
   # Extract the best model

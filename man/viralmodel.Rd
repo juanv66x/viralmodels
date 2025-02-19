@@ -60,7 +60,7 @@ ifelse(column <= 40,
 # Apply the function to all vl columns using purrr's map_dfc
 library(viraldomain)
 data("viral", package = "viraldomain")
-viral_imputed <- viral |>
+viral_imputed <- viral \%>\%
 mutate(across(starts_with("vl"), ~impute_undetectable(.x)))
 traindata <- viral_imputed
 semilla <- 1501
